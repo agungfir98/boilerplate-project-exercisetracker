@@ -112,9 +112,14 @@ app.get("/api/users/:_id/logs", function (req, res) {
       if (limit) {
         resData.log = resData.log.slice(0, limit);
       }
-      resData = resData.toJSON();
-      resData["count"] = data.log.length;
-      res.send(resData);
+      let returnData = {};
+      returnData["_id"] = data.id;
+      returnData["username"] = data.username;
+      returnData["count"] = data.log.length;
+      returnData["log"] = data.log;
+      returnData["log"].date = new Date(returnData["log"].date).toDateString();
+      // console.log();
+      res.send(returnData);
     }
   });
 });
