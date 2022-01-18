@@ -54,47 +54,62 @@ app.post("/api/users/:_id/exercises", function (req, res) {
   const { description, duration, date } = req.body;
   const _id = req.params._id;
 
-  person.findById(_id, function (err, data) {
-    if (!data) {
-      res.send("invalid user Id");
-    } else {
-      const tanggal = new Date(date).toUTCString();
-      const id = data.id;
-      const username = data.username;
-      console.log(id, username, tanggal);
-      const olahraga = new exercise({
-        id,
-        username,
-        date: tanggal,
-        duration,
-        description,
-      });
-      olahraga.save(function (err, data) {
-        const tanggal = data.date;
-        if (err) {
-          res.send(err);
-        } else {
-          res.json({
-            _id: data.id,
-            username: username,
-            date: tanggal,
-            duration: data.duration,
-            description: data.description,
-          });
-        }
-      });
-    }
+  const olahraga = new exercise({
+    description,
+    duration,
+    date,
   });
+
+  if (olahraga.date === "") {
+    olahraga.date = new Date().toString().substring(0, 10);
+  }
+  person.findByIdAndUpdate(
+    _id,
+    { $push: { log: olahraga } },
+    { new: true },
+    (err, data) => {
+      if (err) {
+        res.send(err);
+      }
+      res.send(data);
+    }
+  );
 });
 
 app.get("/api/users/:_id/logs", function (req, res) {
   const id = req.params._id;
   const { from, to, limit } = req.query;
+
   person.findById(id, function (err, data) {
-    if (!data) {
-      res.status(404).send("User not found");
-    } else {
-      res.send(data);
+    if (err) {
+      res.send(err);
     }
+    // if (from || to) {
+    //   let fromDate = new Date(0);
+    //   let toDate = new Date();
+    //   if (from) {
+    //     fromDate = new Date(from);
+    //   }
+    //   console.log(fromDate, typeof fromDate);
+    //   if (to) {
+    //     toDate = new Date(to);
+    //   }
+
+    //   fromDate = fromDate.getTime();
+    //   toDate = toDate.getTime();
+
+    //   data.log = data.log.filter((session) => {
+    //     let sessionDate = new Date(session.date).getTime();
+    //     return sessionDate >= fromDate && sessionDate <= toDate;
+    //   });
+
+    //   if (limit) {
+    //     data.log = data.log.slice(0, limit);
+    //   }
+    data = data.toJSON();
+    data["Exercise count"] = data.log.length;
+    const { _id, username, log } = data;
+    res.send({ _id, username, "Exercise count": data.log.length, log });
+    // }
   });
 });
