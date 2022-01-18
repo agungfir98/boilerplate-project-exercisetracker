@@ -87,6 +87,7 @@ app.get("/api/users/:_id/logs", function (req, res) {
 
   person.findById(id, function (err, data) {
     const { from, to, limit } = req.query;
+    let object = [];
     if (!err) {
       let resData = data;
       if (from || to) {
@@ -112,17 +113,16 @@ app.get("/api/users/:_id/logs", function (req, res) {
       if (limit) {
         resData.log = resData.log.slice(0, limit);
       }
-      let returnData = {};
-      returnData["_id"] = data.id;
-      returnData["username"] = data.username;
-      returnData["count"] = data.log.length;
-      let object = [];
-      data.log.forEach((m) => {
+      resData.log.forEach((m) => {
         let { description, duration } = m;
         let date = m.date.toDateString();
         object.push({ description, duration, date });
         return object;
       });
+      let returnData = {};
+      returnData["_id"] = resData.id;
+      returnData["username"] = resData.username;
+      returnData["count"] = resData.log.length;
       returnData["log"] = object;
       res.send(returnData);
     }
