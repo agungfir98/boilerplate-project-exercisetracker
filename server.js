@@ -58,25 +58,28 @@ app.post("/api/users/:_id/exercises", function (req, res) {
     if (!data) {
       res.send("invalid user Id");
     } else {
+      const tanggal = new Date(date).toUTCString();
       const id = data.id;
       const username = data.username;
+      console.log(id, username, tanggal);
       const olahraga = new exercise({
         id,
         username,
-        description,
+        date: tanggal,
         duration,
-        date,
+        description,
       });
       olahraga.save(function (err, data) {
+        const tanggal = data.date;
         if (err) {
           res.send(err);
         } else {
           res.json({
-            id: data.id,
+            _id: data.id,
             username: username,
-            description: data.description,
+            date: tanggal,
             duration: data.duration,
-            date: data.date,
+            description: data.description,
           });
         }
       });
