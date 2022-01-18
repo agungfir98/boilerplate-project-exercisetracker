@@ -116,9 +116,16 @@ app.get("/api/users/:_id/logs", function (req, res) {
       returnData["_id"] = data.id;
       returnData["username"] = data.username;
       returnData["count"] = data.log.length;
-      returnData["log"] = data.log;
-      returnData["log"].date = new Date(returnData["log"].date).toDateString();
-      // console.log();
+      let object = [];
+      data.log.forEach((m) => {
+        let { description, duration, _id } = m;
+        let date = m.date.toDateString();
+        // console.log({ description, duration, date, _id });
+        object.push({ description, duration, date, _id });
+        return object;
+      });
+      returnData["log"] = object;
+      console.log(returnData);
       res.send(returnData);
     }
   });
