@@ -84,38 +84,37 @@ app.post("/api/users/:_id/exercises", function (req, res) {
 
 app.get("/api/users/:_id/logs", function (req, res) {
   const id = req.params._id;
-  const { from, to, limit } = req.query;
 
   person.findById(id, function (err, data) {
-    if (err) {
-      res.send(err);
+    const { from, to, limit } = req.query;
+    if (!err) {
+      let resData = data;
+      if (from || to) {
+        let fromDate = new Date(0);
+        let toDate = new Date();
+
+        if (from) {
+          fromDate = new Date(from);
+        }
+        if (to) {
+          toDate = new Date(to);
+        }
+
+        fromDate = fromDate.getTime();
+        toDate = toDate.getTime();
+
+        resData.log = resData.log.filter((session) => {
+          let sessionDate = new Date(session.date).getTime();
+          return sessionDate >= fromDate && sessionDate <= toDate;
+        });
+      }
+
+      if (limit) {
+        resData.log = resData.log.slice(0, limit);
+      }
+      resData = resData.toJSON();
+      resData["count"] = data.log.length;
+      res.send(resData);
     }
-    // if (from || to) {
-    //   let fromDate = new Date(0);
-    //   let toDate = new Date();
-    //   if (from) {
-    //     fromDate = new Date(from);
-    //   }
-    //   console.log(fromDate, typeof fromDate);
-    //   if (to) {
-    //     toDate = new Date(to);
-    //   }
-
-    //   fromDate = fromDate.getTime();
-    //   toDate = toDate.getTime();
-
-    //   data.log = data.log.filter((session) => {
-    //     let sessionDate = new Date(session.date).getTime();
-    //     return sessionDate >= fromDate && sessionDate <= toDate;
-    //   });
-
-    //   if (limit) {
-    //     data.log = data.log.slice(0, limit);
-    //   }
-    data = data.toJSON();
-    data["Exercise count"] = data.log.length;
-    const { _id, username, log } = data;
-    res.send({ _id, username, "Exercise count": data.log.length, log });
-    // }
   });
 });
