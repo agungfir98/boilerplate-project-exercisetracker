@@ -71,7 +71,13 @@ app.post("/api/users/:_id/exercises", function (req, res) {
       if (err) {
         res.send(err);
       }
-      res.send(data);
+      let resObj = {};
+      resObj["_id"] = data.id;
+      resObj["username"] = data.username;
+      resObj["date"] = new Date(olahraga.date).toDateString();
+      resObj["description"] = olahraga.description;
+      resObj["duration"] = olahraga.duration;
+      res.send(resObj);
     }
   );
 });
