@@ -82,51 +82,51 @@ app.post("/api/users/:_id/exercises", function (req, res) {
   );
 });
 
-app.get("/api/users/:_id/logs", function (req, res) {
-  const id = req.params._id;
+// app.get("/api/users/:_id/logs", function (req, res) {
+//   const id = req.params._id;
 
-  person.findById(id, function (err, data) {
-    const { from, to, limit } = req.query;
-    if (!err) {
-      let resData = data;
-      if (from || to) {
-        let fromDate = new Date(0);
-        let toDate = new Date();
+//   person.findById(id, function (err, data) {
+//     const { from, to, limit } = req.query;
+//     if (!err) {
+//       let resData = data;
+//       if (from || to) {
+//         let fromDate = new Date(0);
+//         let toDate = new Date();
 
-        if (from) {
-          fromDate = new Date(from);
-        }
-        if (to) {
-          toDate = new Date(to);
-        }
+//         if (from) {
+//           fromDate = new Date(from);
+//         }
+//         if (to) {
+//           toDate = new Date(to);
+//         }
 
-        fromDate = fromDate.getTime();
-        toDate = toDate.getTime();
+//         fromDate = fromDate.getTime();
+//         toDate = toDate.getTime();
 
-        resData.log = resData.log.filter((session) => {
-          let sessionDate = new Date(session.date).getTime();
-          return sessionDate >= fromDate && sessionDate <= toDate;
-        });
-      }
+//         resData.log = resData.log.filter((session) => {
+//           let sessionDate = new Date(session.date).getTime();
+//           return sessionDate >= fromDate && sessionDate <= toDate;
+//         });
+//       }
 
-      if (limit) {
-        resData.log = resData.log.slice(0, limit);
-      }
-      let returnData = {};
-      returnData["_id"] = data.id;
-      returnData["username"] = data.username;
-      returnData["count"] = data.log.length;
-      let object = [];
-      data.log.forEach((m) => {
-        let { description, duration, _id } = m;
-        let date = m.date.toDateString();
-        // console.log({ description, duration, date, _id });
-        object.push({ description, duration, date, _id });
-        return object;
-      });
-      returnData["log"] = object;
-      console.log(returnData);
-      res.send(returnData);
-    }
-  });
-});
+//       if (limit) {
+//         resData.log = resData.log.slice(0, limit);
+//       }
+//       let returnData = {};
+//       returnData["_id"] = data.id;
+//       returnData["username"] = data.username;
+//       returnData["count"] = data.log.length;
+//       let object = [];
+//       data.log.forEach((m) => {
+//         let { description, duration, _id } = m;
+//         let date = m.date.toDateString();
+//         // console.log({ description, duration, date, _id });
+//         object.push({ description, duration, date, _id });
+//         return object;
+//       });
+//       returnData["log"] = object;
+//       console.log(returnData);
+//       res.send(returnData);
+//     }
+//   });
+// });
