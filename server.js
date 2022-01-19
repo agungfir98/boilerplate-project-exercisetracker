@@ -91,8 +91,7 @@ app.get("/api/users/:_id/logs", function (req, res) {
     if (err) {
       res.status(400).send("something went wrong");
     }
-    let resData = data;
-    let log = resData.log.map((m) => {
+    let log = data.log.map((m) => {
       return {
         description: m.description,
         duration: m.duration,
@@ -112,11 +111,11 @@ app.get("/api/users/:_id/logs", function (req, res) {
       log = log.slice(0, limit);
     }
     res.send({
-      username: resData.id,
-      count: resData.log.length,
-      _id: resData.id,
+      username: data.id,
+      count: data.log.length,
+      _id: data.id,
       log: log,
-      // type: { value: log[0].date, typeof: typeof log[0].date },
+      type: { value: log[0].date, typeof: typeof log[0].date },
     });
   });
 });
