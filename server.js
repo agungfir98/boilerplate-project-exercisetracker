@@ -90,29 +90,29 @@ app.get("/api/users/:_id/logs", function (req, res) {
     let object = [];
     if (!err) {
       let resData = data;
-      if (from || to) {
-        let fromDate = new Date(0);
-        let toDate = new Date();
+      // if (from || to) {
+      //   let fromDate = new Date(0);
+      //   let toDate = new Date();
 
-        if (from) {
-          fromDate = new Date(from);
-        }
-        if (to) {
-          toDate = new Date(to);
-        }
+      //   if (from) {
+      //     fromDate = new Date(from);
+      //   }
+      //   if (to) {
+      //     toDate = new Date(to);
+      //   }
 
-        fromDate = fromDate.getTime();
-        toDate = toDate.getTime();
+      //   fromDate = fromDate.getTime();
+      //   toDate = toDate.getTime();
 
-        resData.log = resData.log.filter((session) => {
-          let sessionDate = new Date(session.date).getTime();
-          return sessionDate >= fromDate && sessionDate <= toDate;
-        });
-      }
+      //   resData.log = resData.log.filter((session) => {
+      //     let sessionDate = new Date(session.date).getTime();
+      //     return sessionDate >= fromDate && sessionDate <= toDate;
+      //   });
+      // }
 
-      if (limit) {
-        resData.log = resData.log.slice(0, limit);
-      }
+      // if (limit) {
+      //   resData.log = resData.log.slice(0, limit);
+      // }
       resData.log.forEach((m) => {
         let { description, duration } = m;
         let date = m.date.toDateString();
