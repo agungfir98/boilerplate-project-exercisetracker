@@ -95,7 +95,7 @@ app.get("/api/users/:_id/logs", function (req, res) {
       return {
         description: m.description,
         duration: m.duration,
-        date: new Date(m.date).toDateString().toString(),
+        date: new Date(m.date).toDateString(),
       };
     });
 
