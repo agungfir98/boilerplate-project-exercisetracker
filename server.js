@@ -54,17 +54,13 @@ app.post("/api/users/:_id/exercises", function (req, res) {
   const { description, duration, date } = req.body;
   const _id = req.params._id;
 
+  let tanggal = date === "" || date === undefined ? new Date() : new Date(date);
+
   const olahraga = new exercise({
     description,
     duration,
-    date,
+    date: tanggal,
   });
-
-  if (olahraga.date === "") {
-    olahraga.date = new Date().toDateString();
-  } else {
-    olahraga.date = new Date(olahraga.date).toDateString();
-  }
   person.findByIdAndUpdate(
     _id,
     { $push: { log: olahraga } },
