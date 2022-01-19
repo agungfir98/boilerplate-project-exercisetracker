@@ -87,41 +87,40 @@ app.get("/api/users/:_id/logs", function (req, res) {
 
   person.findById(id, function (err, data) {
     const { from, to, limit } = req.query;
-    if (!err) {
-      let resData = data;
-      let log = resData.log.forEach((m) => {
-        return {
-          description: m.description,
-          duration: m.duration,
-          date: new Date(m.date).toDateString(),
-        };
-      });
 
-      if (from) {
-        const fromDate = new Date(from);
-        log = log.filter((i) => new Date(i.date) >= fromDate);
-      }
-      if (to) {
-        const toDate = new Date(to);
-        log = log.filter((i) => new Date(i.date) <= toDate);
-      }
-      if (limit) {
-        resData.log = resData.log.slice(0, limit);
-      }
-
-      let returnData = {};
-      returnData["_id"] = resData.id;
-      returnData["username"] = resData.username;
-      returnData["count"] = resData.log.length;
-      returnData["log"] = object;
-      res.send({
-        username: resData.id,
-        count: resData.log.length,
-        _id: resData.id,
-        log: log,
-      });
-    } else {
-      res.send("ERROR");
+    if (err) {
+      res.status(400).send("something went wrong");
     }
+    let resData = data;
+    let log = resData.log.map((m) => {
+      return {
+        description: m.description,
+        duration: m.duration,
+        date: new Date(m.date).toDateString(),
+      };
+    });
+
+    if (from) {
+      const fromDate = new Date(from);
+      log = log.filter((i) => new Date(i.date) >= fromDate);
+    }
+    if (to) {
+      const toDate = new Date(to);
+      log = log.filter((i) => new Date(i.date) <= toDate);
+    }
+    if (limit) {
+      resData.log = resData.log.slice(0, limit);
+    }
+
+    let returnData = {};
+    returnData["_id"] = resData.id;
+    returnData["username"] = resData.username;
+    returnData["count"] = resData.log.length;
+    res.send({
+      username: resData.id,
+      count: resData.log.length,
+      _id: resData.id,
+      log: log,
+    });
   });
 });
