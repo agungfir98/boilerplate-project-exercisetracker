@@ -87,44 +87,41 @@ app.get("/api/users/:_id/logs", function (req, res) {
 
   person.findById(id, function (err, data) {
     const { from, to, limit } = req.query;
-    let object = [];
     if (!err) {
       let resData = data;
-      // if (from || to) {
-      //   let fromDate = new Date(0);
-      //   let toDate = new Date();
-
-      //   if (from) {
-      //     fromDate = new Date(from);
-      //   }
-      //   if (to) {
-      //     toDate = new Date(to);
-      //   }
-
-      //   fromDate = fromDate.getTime();
-      //   toDate = toDate.getTime();
-
-      //   resData.log = resData.log.filter((session) => {
-      //     let sessionDate = new Date(session.date).getTime();
-      //     return sessionDate >= fromDate && sessionDate <= toDate;
-      //   });
-      // }
-
-      // if (limit) {
-      //   resData.log = resData.log.slice(0, limit);
-      // }
-      resData.log.forEach((m) => {
-        let { description, duration } = m;
-        let date = m.date.toDateString();
-        object.push({ description, duration, date });
-        return object;
+      let log = resData.log.forEach((m) => {
+        return {
+          description: m.description,
+          duration: m.duration,
+          date: new Date(m.date).toDateString(),
+        };
       });
+
+      if (from) {
+        const fromDate = new Date(from);
+        log = log.filter((i) => new Date(i.date) >= fromDate);
+      }
+      if (to) {
+        const toDate = new Date(to);
+        log = log.filter((i) => new Date(i.date) <= toDate);
+      }
+      if (limit) {
+        resData.log = resData.log.slice(0, limit);
+      }
+
       let returnData = {};
       returnData["_id"] = resData.id;
       returnData["username"] = resData.username;
       returnData["count"] = resData.log.length;
       returnData["log"] = object;
-      res.send(returnData);
+      res.send({
+        username: resData.id,
+        count: resData.log.length,
+        _id: resData.id,
+        log: log,
+      });
+    } else {
+      res.send("ERROR");
     }
   });
 });
