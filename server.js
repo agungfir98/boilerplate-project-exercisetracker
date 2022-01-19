@@ -109,7 +109,7 @@ app.get("/api/users/:_id/logs", function (req, res) {
       log = log.filter((i) => new Date(i.date) <= toDate);
     }
     if (limit) {
-      resData.log = resData.log.slice(0, limit);
+      log = log.slice(0, limit);
     }
 
     let returnData = {};
