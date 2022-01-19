@@ -96,7 +96,7 @@ app.get("/api/users/:_id/logs", function (req, res) {
       return {
         description: m.description,
         duration: m.duration,
-        date: new Date(m.date).toDateString(),
+        date: new Date(m.date).toDateString().toString(),
       };
     });
 
@@ -111,16 +111,12 @@ app.get("/api/users/:_id/logs", function (req, res) {
     if (limit) {
       log = log.slice(0, limit);
     }
-
-    let returnData = {};
-    returnData["_id"] = resData.id;
-    returnData["username"] = resData.username;
-    returnData["count"] = resData.log.length;
     res.send({
       username: resData.id,
       count: resData.log.length,
       _id: resData.id,
       log: log,
+      // type: { value: log[0].date, typeof: typeof log[0].date },
     });
   });
 });
