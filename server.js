@@ -115,7 +115,6 @@ app.get("/api/users/:_id/logs", function (req, res) {
       count: data.log.length,
       _id: data.id,
       log: log,
-      type: { value: log[0].date, typeof: typeof log[0].date },
     });
   });
 });
