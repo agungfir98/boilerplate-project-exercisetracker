@@ -61,7 +61,9 @@ app.post("/api/users/:_id/exercises", function (req, res) {
   });
 
   if (olahraga.date === "") {
-    olahraga.date = new Date().toString().substring(0, 10);
+    olahraga.date = new Date().toDateString();
+  } else {
+    olahraga.date = new Date(olahraga.date).toDateString();
   }
   person.findByIdAndUpdate(
     _id,
